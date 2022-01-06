@@ -1,4 +1,5 @@
-﻿using PactNet.Infrastructure.Outputters;
+﻿using System.Diagnostics;
+using PactNet.Infrastructure.Outputters;
 using Xunit.Abstractions;
 
 namespace tests.XUnitHelpers
@@ -15,6 +16,7 @@ namespace tests.XUnitHelpers
         public void WriteLine(string line)
         {
             _output.WriteLine(line);
+            Debug.WriteLine(line);
         }
     }
 }

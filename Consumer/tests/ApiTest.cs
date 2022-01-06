@@ -50,6 +50,7 @@ namespace tests
             pact.UponReceiving("A valid request for all products")
                     .Given("products exist")
                     .WithRequest(HttpMethod.Get, "/api/products")
+                    .WithHeader("Authorization", Match.Regex("Bearer 2019-01-14T11:34:18.045Z", "Bearer \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"))
                 .WillRespond()
                     .WithStatus(HttpStatusCode.OK)
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
@@ -62,20 +63,79 @@ namespace tests
         }
 
         [Fact]
-        public async void GetProduct()
+        public async void GetProduct10()
         {
             // Arange
-            pact.UponReceiving("A valid request for a product")
+            pact.UponReceiving("A valid request for product 10")
                     .Given("product with ID 10 exists")
-                    .WithRequest(HttpMethod.Get, "/api/product/10")
+                    .WithRequest(HttpMethod.Get, "/api/products/10")
+                    .WithHeader("Authorization", Match.Regex("Bearer 2019-01-14T11:34:18.045Z", "Bearer \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"))
                 .WillRespond()
                     .WithStatus(HttpStatusCode.OK)
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
                     .WithJsonBody(new TypeMatcher(products[1]));
 
-            await pact.VerifyAsync(async ctx => {
+            await pact.VerifyAsync(async ctx =>
+            {
                 var response = await ApiClient.GetProduct(10);
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            });
+        }
+
+        [Fact]
+        public async void GetProduct9()
+        {
+            // Arange
+            pact.UponReceiving("A valid request for product 9")
+                    .Given("product with ID 9 exists")
+                    .WithRequest(HttpMethod.Get, "/api/products/9")
+                    .WithHeader("Authorization", Match.Regex("Bearer 2019-01-14T11:34:18.045Z", "Bearer \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"))
+                .WillRespond()
+                    .WithStatus(HttpStatusCode.OK)
+                    .WithHeader("Content-Type", "application/json; charset=utf-8")
+                    .WithJsonBody(new TypeMatcher(products[0]));
+
+            await pact.VerifyAsync(async ctx =>
+            {
+                var response = await ApiClient.GetProduct(9);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            });
+        }
+
+        [Fact]
+        public async void NoProductsExist()
+        {
+            pact.UponReceiving("A valid request for products and none exist")
+                    .Given("no products exist")
+                    .WithRequest(HttpMethod.Get, "/api/products")
+                    .WithHeader("Authorization", Match.Regex("Bearer 2019-01-14T11:34:18.045Z", "Bearer \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"))
+                .WillRespond()
+                    .WithStatus(HttpStatusCode.OK)
+                    .WithHeader("Content-Type", "application/json; charset=utf-8")
+                    .WithJsonBody(new TypeMatcher(new List<object>()));
+
+            await pact.VerifyAsync(async ctx =>
+            {
+                var response = await ApiClient.GetAllProducts();
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            });
+        }
+
+        [Fact]
+        public async void ProductDoesNotExist()
+        {
+            // Arange
+            pact.UponReceiving("A valid request for product 11 that does not exist")
+                    .Given("product with ID 11 does not exist")
+                    .WithRequest(HttpMethod.Get, "/api/products/11")
+                    .WithHeader("Authorization", Match.Regex("Bearer 2019-01-14T11:34:18.045Z", "Bearer \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z"))
+                .WillRespond()
+                   .WithStatus(HttpStatusCode.NotFound);
+
+            await pact.VerifyAsync(async ctx =>
+            {
+                var response = await ApiClient.GetProduct(11);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             });
         }
     }

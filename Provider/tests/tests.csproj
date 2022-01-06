@@ -4,10 +4,15 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <UserSecretsId>96676207-6a16-4a72-aec4-80b7f8e6709c</UserSecretsId>
+
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="PactNet" Version="4.0.0-beta" />
     <PackageReference Include="PactNet.Native" Version="0.1.0-beta" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -30,7 +35,6 @@
     <None Remove="XUnitHelpers\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Middleware\" />
     <Folder Include="XUnitHelpers\" />
   </ItemGroup>
 </Project>

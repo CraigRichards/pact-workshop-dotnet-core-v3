@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using provider.Middleware;
 using provider.Repositories;
 
 namespace Provider
@@ -32,6 +33,8 @@ namespace Provider
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<AuthorizationMiddleware>();
             app.UseRouting();
             app.UseEndpoints(e => e.MapControllers());
         }

@@ -6,7 +6,7 @@ namespace provider.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private List<Product> State { get; set; }
+        private List<Product> State { get; set; } = new List<Product>();
 
         public ProductRepository()
         {
